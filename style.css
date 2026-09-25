@@ -1,0 +1,255 @@
+/* ==========================================================
+   style.css - presentation for the Warehouse Robot Path Planner
+   app.py decides WHICH state a cell is in (e.g. "explored");
+   this file decides what that state LOOKS like.
+
+   Each grid cell is wrapped in a Streamlit container whose key is
+   "cell-<state>-<row>-<col>", which Streamlit exposes as the CSS class
+   "st-key-cell-<state>-<row>-<col>". The [class*="st-key-cell-<state>-"]
+   selectors below match on that class.
+   ========================================================== */
+
+/* Global */
+:root {
+    --bg: #ffffff;
+    --bg-soft: #f3f4f6;
+    --text: #1a1a1a;
+    --text-muted: #4b5563;
+    --border: #e5e7eb;
+    --primary: #2563eb;
+    color-scheme: light;
+}
+.stApp,
+[data-testid="stAppViewContainer"],
+[data-testid="stHeader"],
+[data-testid="stSidebar"] {
+    background-color: var(--bg) !important;
+}
+.stApp, .stApp p, .stApp label, .stApp span, .stApp li {
+    color: var(--text) !important;
+}
+.block-container {
+    max-width: 760px;
+    padding-top: 2.5rem;
+    padding-bottom: 3rem;
+}
+
+/* Header */
+h1 {
+    font-size: 2rem !important;
+    letter-spacing: -0.01em;
+    padding-bottom: 0.1rem !important;
+}
+h4, h3 {
+    margin-top: 0.4rem !important;
+    letter-spacing: -0.005em;
+}
+.step-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted) !important;
+    margin: 14px 0 4px 0;
+}
+.stApp .flow-hint {
+    font-size: 13px;
+    color: var(--text-muted) !important;
+    margin: 0 0 12px 0;
+}
+
+/* Controls */
+.stButton > button {
+    border-radius: 6px;
+    font-weight: 600;
+}
+/* secondary buttons and the scenario dropdown stay light even if the OS is in dark mode */
+.stApp [data-testid="stBaseButton-secondary"] {
+    background-color: #ffffff !important;
+    border: 1px solid #d1d5db !important;
+}
+.stApp [data-testid="stBaseButton-secondary"] p { color: var(--text) !important; }
+.stApp [data-baseweb="select"] > div {
+    background-color: #ffffff !important;
+    border: 1px solid #d1d5db !important;
+}
+.stApp [data-baseweb="select"] div { color: var(--text) !important; }
+.stApp [data-testid="stBaseButton-primary"] {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+.stApp [data-testid="stBaseButton-primary"] p {
+    color: #ffffff !important;
+}
+
+/* Warehouse Grid */
+.st-key-warehouse-grid [data-testid="stHorizontalBlock"] {
+    flex-wrap: nowrap !important;   /* keep 10 cells on one row, even on narrow screens */
+    gap: 2px !important;
+    justify-content: center;
+}
+.st-key-warehouse-grid [data-testid="stColumn"] {
+    min-width: 0 !important;
+    width: auto !important;
+    flex: 0 0 auto !important;
+}
+.st-key-warehouse-grid [data-testid="stVerticalBlock"] {
+    gap: 2px !important;
+}
+.st-key-warehouse-grid button {
+    width: 38px;
+    height: 38px;
+    min-height: 0;
+    padding: 0;
+    border-radius: 2px;
+    border: 1px solid var(--border);
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1;
+}
+.st-key-warehouse-grid button:disabled {
+    opacity: 1 !important;          /* stay readable while an animation is running */
+    cursor: default;
+}
+.st-key-warehouse-grid button p {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* Cell States
+   (prefixed with .stApp so they out-rank the generic secondary-button rule above) */
+/* open floor: faint checker pattern */
+.stApp [class*="st-key-cell-floora-"] button { background-color: #ffffff !important; color: #1a1a1a !important; }
+.stApp [class*="st-key-cell-floorb-"] button { background-color: #f3f4f6 !important; color: #1a1a1a !important; }
+
+/* A* search: cells already expanded, and the cell being expanded right now */
+.stApp [class*="st-key-cell-explored-"] button { background-color: #fef3c7 !important; border-color: #fcd34d !important; }
+.stApp [class*="st-key-cell-current-"] button  { background-color: #f97316 !important; border-color: #c2410c !important; }
+
+/* final shortest path */
+.stApp [class*="st-key-cell-path-"] button { background-color: #93c5fd !important; border-color: #60a5fa !important; }
+
+/* start (robot at home), robot (while moving / arrived) and access point (the cell A* actually searches for) */
+.stApp [class*="st-key-cell-start-"] button,
+.stApp [class*="st-key-cell-robot-"] button  { background-color: #16a34a !important; border-color: #15803d !important; }
+.stApp [class*="st-key-cell-access-"] button { background-color: #dc2626 !important; border-color: #b91c1c !important; }
+.stApp [class*="st-key-cell-start-"] button p,
+.stApp [class*="st-key-cell-robot-"] button p,
+.stApp [class*="st-key-cell-access-"] button p { color: #ffffff !important; }
+
+/* racks: three purely cosmetic looks (shelf / pallet / crate); A* sees only "blocked" */
+.stApp [class*="st-key-cell-rack0-"] button,
+.stApp [class*="st-key-cell-target0-"] button {
+    background-color: #4b5563 !important;
+    background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.22) 0px, rgba(255,255,255,0.22) 2px, transparent 2px, transparent 11px) !important;
+}
+.stApp [class*="st-key-cell-rack1-"] button,
+.stApp [class*="st-key-cell-target1-"] button {
+    background-color: #5b4636 !important;
+    background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.18) 0px, rgba(255,255,255,0.18) 3px, transparent 3px, transparent 9px) !important;
+}
+.stApp [class*="st-key-cell-rack2-"] button,
+.stApp [class*="st-key-cell-target2-"] button {
+    background-color: #44403c !important;
+    background-image:
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.2) 0px, rgba(255,255,255,0.2) 2px, transparent 2px, transparent 9px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.2) 0px, rgba(255,255,255,0.2) 2px, transparent 2px, transparent 9px) !important;
+}
+.stApp [class*="st-key-cell-rack"] button {
+    border-color: rgba(0, 0, 0, 0.35) !important;
+    color: transparent !important;
+}
+/* target rack: gold border + "T" marker */
+.stApp [class*="st-key-cell-target"] button {
+    border: 3px solid #f59e0b !important;
+}
+.stApp [class*="st-key-cell-target"] button p { color: #fde68a !important; }
+
+/* Legend */
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    font-size: 13px;
+    color: var(--text-muted) !important;
+    margin: 8px 0 4px 0;
+}
+.legend span { color: var(--text-muted) !important; }
+.legend .swatch {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    margin-right: 5px;
+    vertical-align: middle;
+    border: 1px solid rgba(0, 0, 0, 0.18);
+}
+
+.swatch.sw-start    { background: #16a34a; }
+.swatch.sw-target   { background: #4b5563; border: 2px solid #f59e0b; }
+.swatch.sw-access   { background: #dc2626; }
+.swatch.sw-rack     { background: #4b5563; }
+.swatch.sw-explored { background: #fef3c7; }
+.swatch.sw-current  { background: #f97316; }
+.swatch.sw-path     { background: #93c5fd; }
+
+/* Result Panel */
+.panel {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 12px 16px 14px 16px;
+    margin: 8px 0 12px 0;
+}
+.panel-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted) !important;
+    margin-bottom: 8px;
+}
+.status-badge {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--bg-soft);
+}
+.status-badge.ok      { background: #dcfce7; color: #166534 !important; }
+.status-badge.busy    { background: #ffedd5; color: #9a3412 !important; }
+.status-badge.error   { background: #fee2e2; color: #991b1b !important; }
+.stApp .result-message {
+    font-size: 14px;
+    margin: 10px 0 0 0;
+}
+.stApp .result-message.error { color: #991b1b !important; }
+.stApp .result-message.muted { color: var(--text-muted) !important; }
+
+/* Statistics */
+.stats {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px;
+    max-width: 360px;
+    margin: 0;
+}
+.stats-spaced { margin-top: 10px; }
+.stat {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 14px;
+    padding: 3px 0;
+    border-bottom: 1px solid var(--bg-soft);
+}
+.stat .k { color: var(--text-muted) !important; }
+.stat .v { font-weight: 600; text-align: right; }
+
+/* Responsive Layout */
+@media (max-width: 640px) {
+    .block-container { padding-left: 0.75rem; padding-right: 0.75rem; }
+    .st-key-warehouse-grid button { width: 30px; height: 30px; }
+    h1 { font-size: 1.5rem !important; }
+}
