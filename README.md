@@ -4,6 +4,13 @@ A web-based warehouse robot navigation system developed using **Python, Streamli
 
 ---
 
+## Live Demo
+
+**Deployed Application:**  
+https://warehouse-robot-path-planner-l2tzapvr6kdh5kedsbjved.streamlit.app/
+
+---
+
 ## Features
 
 - A\* Search Algorithm with Manhattan Distance Heuristic
