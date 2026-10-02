@@ -7,6 +7,13 @@ The project was built as a B.Tech Artificial Intelligence course project. Its pu
 > **Scope:** this is a software simulation of path planning on a fixed 10 × 10 grid. It does not control a physical robot and does not use sensors, machine learning or real warehouse data.
 
 ---
+## Live Demo
+
+**Deployed Application:**
+https://warehouse-robot-path-planner-l2tzapvr6kdh5kedsbjved.streamlit.app/
+
+---
+
 
 ## Contents
 
