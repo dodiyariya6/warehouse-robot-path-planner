@@ -10,7 +10,7 @@ The project was built as a B.Tech Artificial Intelligence course project. Its pu
 ## Live Demo
 
 **Deployed Application:**
-https://warehouse-robot-path-planner-l2tzapvr6kdh5kedsbjved.streamlit.app/
+https://warehouse-robot.streamlit.app/
 
 ---
 
